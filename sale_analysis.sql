@@ -22,8 +22,7 @@ ALTER TABLE sales_dataset_rfm_prj
 ALTER COLUMN msrp TYPE numeric USING (TRIM(msrp):: numeric)
 
 --- 2: Clean the data.
-
-  --- 2.1: Check NULL/BLANK ('') in the fields: ORDERNUMBER, QUANTITYORDERED, PRICEEACH, ORDERLINENUMBER, SALES, ORDERDATE.
+--- 2.1: Check NULL/BLANK ('') in the fields: ORDERNUMBER, QUANTITYORDERED, PRICEEACH, ORDERLINENUMBER, SALES, ORDERDATE.
 SELECT *
 FROM sales_dataset_rfm_prj
 WHERE 
@@ -62,7 +61,7 @@ SET QTR_ID = EXTRACT(QUARTER FROM ORDERDATE),
 ---2.4: Find outliers (if any) for the column QUANTITYORDERED
 SELECT * FROM  sales_dataset_rfm_prj
 
-  --- Find outliers using IQR/boxplot
+--- Find outliers using IQR/boxplot
 with Twt_min_max_values AS(
 SELECT Q1 - 1.5*IQR AS min_value, 
 Q3 + 1.5*IQR AS max_value FROM
@@ -70,6 +69,7 @@ Q3 + 1.5*IQR AS max_value FROM
 percentile_cont (0.75) within (ORDER by QUANTITYORDERED) AS Q3,
 percentile_cont (0.75) within (ORDER by QUANTITYORDERED)-percentile_cont (0.25) within (ORDER by QUANTITYORDERED)AS IQR
 FROM  sales_dataset_rfm_prj) AS a)
+
 --- Identify outliers:  
 SELECT * FROM sales_dataset_rfm_prj
 WHERE QUANTITYORDERED< (SELECT min_value FROM Twt_min_max_values )
@@ -88,7 +88,7 @@ SELECT orderdate,QUANTITYORDERED,(QUANTITYORDERED-avg)/stddev AS z_score
 from cte 
 where ABS ((QUANTITYORDERED-avg)/stddev)>2)
 
---- Handle the outlier values using two methods: either update the outliers with the average values or remove them from the dataset.
+  --- Handle the outlier values using two methods: either update the outliers with the average values or remove them from the dataset.
 UPDATE sales_dataset_rfm_prj
 SET QUANTITYORDERED=(avg(QUANTITYORDERED) FROM sales_dataset_rfm_prj)
 WHERE QUANTITYORDERED IN(SELECT QUANTITYORDERED FROM twt_outliner);
