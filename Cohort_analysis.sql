@@ -84,7 +84,30 @@ group by gender, tag
 + Gender Male: the oldest is 70 years old (529 users); the youngest is 12 years old (546 users)
 /*
 
-  --4-- Top 5 products with the highest profit each month (ranking for each product).
+--4-- Top 5 products with the highest profit each month (ranking for each product).
+*/
+*/
+Select * from 
+(With product_profit as
+(
+Select 
+CAST(FORMAT_DATE('%Y-%m', t1.delivered_at) AS STRING) as month_year,
+t1.product_id as product_id,
+t2.name as product_name,
+round(sum(t1.sale_price),2) as sales,
+round(sum(t2.cost),2) as cost,
+round(sum(t1.sale_price)-sum(t2.cost),2)  as profit
+from bigquery-public-data.thelook_ecommerce.order_items as t1
+Join bigquery-public-data.thelook_ecommerce.products as t2 on t1.product_id=t2.id
+Where t1.status='Complete'
+Group by month_year, t1.product_id, t2.name
+)
+Select * ,
+dense_rank() OVER ( PARTITION BY month_year ORDER BY month_year,profit) as rank
+from product_profit
+) as rank_table
+Where rank_table.rank<=5
+order by rank_table.month_year
 Select * from 
 (With product_profit as
 (
@@ -118,7 +141,7 @@ Where t1.status='Complete' and t1.delivered_at BETWEEN '2022-01-15 00:00:00' AND
 Group by dates, product_categories
 Order by dates
 
-II/ Create a dataset includes the following variables:
+/* II/ Create a dataset includes the following variables:
 Month
 Year
 Product_category
@@ -128,7 +151,7 @@ Revenue_growth
 Order_growth
 Total_cost
 Total_profit
-Profit_to_cost_ratio and save that dataset into a VIEW named vw_ecommerce_analyst
+Profit_to_cost_ratio and save that dataset into a VIEW named vw_ecommerce_analyst */
 /* 
 1) Create Dataset
 */
@@ -217,7 +240,7 @@ Select cohort_month,
 (100.00 - round(100.00* m4/m1,2))|| '%' as m4
 from customer_cohort
 
-Chart Cohort: https://docs.google.com/spreadsheets/d/1TNpmMQZyMTcvmp7lzv0jImnfQNU5i9XFMDD3Zw5bX50/edit?gid=0#gid=0
+-- Chart Cohort: https://docs.google.com/spreadsheets/d/1TNpmMQZyMTcvmp7lzv0jImnfQNU5i9XFMDD3Zw5bX50/edit?gid=0#gid=0
 /*
 Overall, TheLook has recorded a consistent increase in the number of new users each month, indicating the effectiveness of the advertising campaign targeting new users.
 However, during the first 4 months after making a purchase or using TheLook’s e-commerce site, the rate of returning users in the following month is quite low: it fluctuated below 10% from January 2019 to July 2023 
