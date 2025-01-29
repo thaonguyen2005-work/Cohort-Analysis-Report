@@ -212,6 +212,7 @@ round(100.00* m4/m1,2) || '%' as m4
 from customer_cohort
 )
 --CHURN COHORT--
+churn cohort as
 Select cohort_month,
 (100.00 - round(100.00* m1/m1,2)) || '%' as m1,
 (100.00 - round(100.00* m2/m1,2)) || '%' as m2,
@@ -219,7 +220,6 @@ Select cohort_month,
 (100.00 - round(100.00* m4/m1,2))|| '%' as m4
 from customer_cohort
 
--- Chart Cohort: https://docs.google.com/spreadsheets/d/1TNpmMQZyMTcvmp7lzv0jImnfQNU5i9XFMDD3Zw5bX50/edit?gid=0#gid=0
 /*
 Overall, TheLook has recorded a consistent increase in the number of new users each month, indicating the effectiveness of the advertising campaign targeting new users.
 However, during the first 4 months after making a purchase or using TheLook’s e-commerce site, the rate of returning users in the following month is quite low: it fluctuated below 10% from January 2019 to July 2023 
