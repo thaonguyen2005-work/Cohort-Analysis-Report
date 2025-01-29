@@ -87,27 +87,28 @@ group by gender, tag
 --4-- Top 5 products with the highest profit each month (ranking for each product).
 */
 */
-Select * from 
-(With product_profit as
-(
-Select 
-CAST(FORMAT_DATE('%Y-%m', t1.delivered_at) AS STRING) as month_year,
-t1.product_id as product_id,
-t2.name as product_name,
-round(sum(t1.sale_price),2) as sales,
-round(sum(t2.cost),2) as cost,
-round(sum(t1.sale_price)-sum(t2.cost),2)  as profit
-from bigquery-public-data.thelook_ecommerce.order_items as t1
-Join bigquery-public-data.thelook_ecommerce.products as t2 on t1.product_id=t2.id
-Where t1.status='Complete'
-Group by month_year, t1.product_id, t2.name
+WITH product_profit AS (
+    SELECT 
+        CAST(FORMAT_DATE('%Y-%m', t1.delivered_at) AS STRING) AS month_year,
+        t1.product_id AS product_id,
+        t2.name AS product_name,
+        ROUND(SUM(t1.sale_price), 2) AS sales,
+        ROUND(SUM(t2.cost), 2) AS cost,
+        ROUND(SUM(t1.sale_price) - SUM(t2.cost), 2) AS profit
+    FROM bigquery-public-data.thelook_ecommerce.order_items AS t1
+    JOIN bigquery-public-data.thelook_ecommerce.products AS t2 
+        ON t1.product_id = t2.id
+    WHERE t1.status = 'Complete'
+    GROUP BY month_year, t1.product_id, t2.name
 )
-Select * ,
-dense_rank() OVER ( PARTITION BY month_year ORDER BY month_year,profit) as rank
-from product_profit
-) as rank_table
-Where rank_table.rank<=5
-order by rank_table.month_year
+SELECT * 
+FROM (
+    SELECT *,
+           DENSE_RANK() OVER (PARTITION BY month_year ORDER BY profit DESC) AS rank
+    FROM product_profit
+) AS ranked_table
+WHERE ranked_table.rank <= 5
+ORDER BY ranked_table.month_year, ranked_table.rank;
 --5-- Revenue to date for each category Statistics of total daily revenue for each product category in the past 3 months (assuming the current date is April 15, 2022).
 Select 
 CAST(FORMAT_DATE('%Y-%m-%d', t1.delivered_at) AS STRING) as dates,
