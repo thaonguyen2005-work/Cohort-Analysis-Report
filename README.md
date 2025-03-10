@@ -1,4 +1,9 @@
 # About the Project:  
+
+## Customer Cohort Analysis  
+This document contains analysis and insights related to my customer cohorts analysis project. You can access it here:  
+[Customer Cohort Analysis](https://www.notion.so/Customer-Cohort-Analysis-1b287d1db49180a28a06fcc76102c9a2?pvs=4)
+
 ## Overview of the data: 
 
 TheLook is an e-commerce platform specializing in clothing, and the dataset includes information about customers, products, orders, logistics, web events, and digital marketing campaigns.
