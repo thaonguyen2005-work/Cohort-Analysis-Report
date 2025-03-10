@@ -2,7 +2,7 @@
 
 ## Customer Cohort Analysis  
 This document contains analysis and insights related to my customer cohorts analysis project. You can access it here:  
-[Customer Cohort Analysis](https://www.notion.so/Customer-Cohort-Analysis-1b287d1db49180a28a06fcc76102c9a2?pvs=4)
+[https://harvest-barometer-41a.notion.site/Customer-Cohort-Analysis-1b287d1db49180a28a06fcc76102c9a2?pvs=4)
 
 ## Overview of the data: 
 
