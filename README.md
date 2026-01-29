@@ -1,7 +1,6 @@
 # About the Project:  
 
 ## Customer Cohort Analysis  
-[View this document for analysis and insights related to this project.](https://harvest-barometer-41a.notion.site/Customer-Cohort-Analysis-1b287d1db49180a28a06fcc76102c9a2)
 
 ## Overview of the data: 
 
